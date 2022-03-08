@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MudBlazor.Services;
+using MyOrderCart.Services;
 
 namespace MyOrderCart
 {
@@ -28,7 +30,11 @@ namespace MyOrderCart
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMudServices();
+            services.AddHttpClient();
+            services.AddTransient<FakeApiService>();
             services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<ProductService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

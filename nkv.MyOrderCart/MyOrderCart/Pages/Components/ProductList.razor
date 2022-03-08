@@ -1,0 +1,37 @@
+﻿@inject ProductService ProductService
+<MudText Typo="Typo.h3">Product List</MudText>
+<MudGrid Spacing="4" Justify="Justify.FlexStart">
+
+	@if (products == null)
+	{
+		<MudItem xs="12" sm="12" lg="12" md="12"><p><em>Loading...</em></p></MudItem>
+	}
+	else
+	{
+		@foreach (var product in products)
+		{
+			<MudItem xs="12" sm="6" lg="4" md="6">
+				<MudCard>
+					<MudCardMedia Image="@product.image" Height="200" />
+					<MudCardContent>
+						<MudText Typo="Typo.h5">@product.title</MudText>
+						<MudText Typo="Typo.body2">@product.description</MudText>
+						<MudRating SelectedValue="@product.rating.count" /> 
+					</MudCardContent>
+					<MudCardActions>
+						<MudButton Variant="Variant.Filled" FullWidth="true" StartIcon="@Icons.Material.Filled.AddShoppingCart" Color="Color.Primary">€ @(product.price) Add To Cart</MudButton>
+					</MudCardActions>
+				</MudCard>
+			</MudItem>
+		}
+	}
+</MudGrid>
+
+@code {
+	private List<Product> products;
+
+	protected override async Task OnInitializedAsync()
+	{
+		products = await ProductService.GetProductsAsync();
+	}
+}
