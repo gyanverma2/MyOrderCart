@@ -47,4 +47,10 @@ else
         await ProtectedLocalStore.SetAsync("MyShoppingCart", ShoppingCart);
         StateHasChanged();
     }
+    public async Task ClearStateAsync() 
+    {
+        ShoppingCart=new Cart();
+        await ProtectedLocalStore.DeleteAsync("MyShoppingCart");
+        StateHasChanged();
+    }
 }

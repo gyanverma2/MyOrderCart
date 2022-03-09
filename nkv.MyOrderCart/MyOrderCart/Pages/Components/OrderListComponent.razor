@@ -1,0 +1,39 @@
+﻿@page "/order-list"
+@inject IDbContextFactory<OrderContext> DbFactory
+<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">All Orders</MudText>
+<MudGrid Spacing="4" Justify="Justify.FlexStart">
+	@if (Orders == null)
+	{
+		<MudItem xs="12" sm="12" lg="12" md="12">
+			<MudSkeleton />
+			<MudSkeleton Animation="Animation.False" />
+			<MudSkeleton Animation="Animation.Wave" />
+			<p>Loading...</p>
+		</MudItem>
+	}
+	else
+	{
+		<MudTable Items="@Orders" Dense="false" Hover="true" Bordered="true" Striped="true">
+			<RowTemplate>
+				<MudTd>@context.Id</MudTd>
+				<MudTd>
+				@foreach (var cartData in @context.Items)
+				{
+					<MudChip Color="Color.Primary">@cartData.Product.title X @cartData.Quantity</MudChip>
+				}
+			</MudTd>
+			<MudTd>
+				€ @context.Total
+				</MudTd>
+		</RowTemplate>
+	</MudTable>
+	}
+</MudGrid>
+@code {
+	private List<Cart> Orders;
+	protected override async Task OnInitializedAsync()
+	{
+		using var context = DbFactory.CreateDbContext();
+		Orders = context.Orders.ToList();
+	}
+}

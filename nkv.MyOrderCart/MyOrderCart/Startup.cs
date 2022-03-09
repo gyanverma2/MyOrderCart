@@ -13,16 +13,17 @@ using System.Threading.Tasks;
 using MudBlazor.Services;
 using MyOrderCart.Services;
 using Microsoft.AspNetCore.ProtectedBrowserStorage;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.DotNet.PlatformAbstractions;
 
 namespace MyOrderCart
 {
-    public class Startup
-    {
+public class Startup
+{
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -35,6 +36,8 @@ namespace MyOrderCart
             services.AddHttpClient();
             services.AddProtectedBrowserStorage();
             services.AddSingleton<WeatherForecastService>();
+            services.AddDbContextFactory<OrderContext>(opt =>
+               opt.UseSqlite($"Data Source={nameof(OrderContext.OrderDb)}.db"));
             services.AddSingleton<IFakeApiService, FakeApiService>();
             services.AddHttpClient<IFakeApiService, FakeApiService>(c =>
             {

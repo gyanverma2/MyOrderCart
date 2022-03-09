@@ -1,4 +1,6 @@
-﻿namespace MyOrderCart.Data
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MyOrderCart.Data
 {
     public class Rating
     {
