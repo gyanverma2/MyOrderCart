@@ -2,6 +2,25 @@
 Create a Blazor Server APP [C# Net 5.0] to explore the opportunity to learn about different aspects of Blazor Application Development
 ![Sample Screenshot!](/Images/SampleApp.PNG "Sample screenshot")
 
+## Requirments
+<ul>
+  <li>[x] Products table should have 2 columns: Title and Unit Price. Search on the table is possible by the title of the product</li>
+<li>[x] Component 2 should be updated automatically without refresh of the page when a product is added/updated to the cart.</li>
+<li>[x] The UI needs to provide the ability for the user to add a product from the list (component 1) to the cart.
+  <ul><li>[x] When the same product is not yet added to the cart it will be added with a quantity of 1.</li>
+<li>[x] When the product already exists, the quantity of the existing order line item is increased by 1</li></ul>
+</li>
+<li>[x] All products in the current order will be displayed in a table displaying the Product Title, Unit</li>
+Price, Quantity and Total Price. In the bottom there should be shown the Total Price of the order. (component 2)</li>
+<li>[x] At least the code of one functionality of the application should be covered by Unit Tests (XUnit).</li>
+</ul>
+Optional
+<ul><li>[x] Confirm Order in External System.</li>
+  <li>[x] Entity Framework Core.</li>
+  <li>[x] BUnit to test one of the Blazor components.</li>
+  </ul>
+
+
 ## Tech-Stack To Understand
 <ul>
   <li>Blazor Server APP</li>
