@@ -1,5 +1,5 @@
 ﻿@inject IDialogService DialogService
-@if (StateProvider != null && StateProvider.ShoppingCart!=null && StateProvider.ShoppingCart.Items.Count > 0)
+@if (StateProvider != null && StateProvider.ShoppingCart.Items.Count > 0)
 {
 	<MudText class="mt-2 mr-2" Align="Align.Start" Typo="Typo.h5">Your Cart: (@StateProvider.ShoppingCart.Items.Count)</MudText>
 	<MudTable Items="@StateProvider.ShoppingCart.Items" Hover="true" Breakpoint="Breakpoint.Sm" Virtualize="true" FixedHeader="true" Height="70vh">
