@@ -1,7 +1,11 @@
 ﻿@page "/"
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+@using MyOrderCart.Pages.Components
+ <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">My Order Cart</MudText>
+<MudGrid>
+	<MudItem xs="12" sm="12" lg="7" md="7">
+		<ProductListComponent></ProductListComponent>
+	</MudItem>
+	<MudItem xs="12" sm="12" lg="5" md="5">
+		<CartComponent></CartComponent>
+	</MudItem>
+</MudGrid>

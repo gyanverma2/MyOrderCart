@@ -1,0 +1,47 @@
+﻿@inject IDialogService DialogService
+@if (StateProvider != null && StateProvider.ShoppingCart.Items.Count > 0)
+{
+	<MudText class="mt-2 mr-2" Align="Align.Start" Typo="Typo.h5">Your Cart: (@StateProvider.ShoppingCart.Items.Count)</MudText>
+	<MudTable Items="@StateProvider.ShoppingCart.Items" Hover="true" Breakpoint="Breakpoint.Sm" Virtualize="true" FixedHeader="true" Height="70vh">
+		<RowTemplate>
+			<MudTd>@context.Product.title</MudTd>
+			<MudTd>€ @context.Product.price x @context.Quantity</MudTd>
+			<MudTd>€ @context.Total</MudTd>
+			<MudTd>
+				<MudFab StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" @onclick="@(() => RemoveCartItem(@context))"></MudFab>
+			</MudTd>
+		</RowTemplate>
+	</MudTable>
+	<MudCard>
+		<MudCardContent>
+			<MudText Align="Align.Right" class="mr-2" Typo="Typo.h6">Total: € @StateProvider.ShoppingCart.Total</MudText>
+			<MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" @onclick="ConfirmCheckOut">Checkout</MudButton>
+		</MudCardContent>
+	</MudCard>
+}
+else
+{
+	<MudText class="mt-2 mr-2" Align="Align.Start" Typo="Typo.h5">Your Cart: Is Empty</MudText>
+	<MudLink Href="/order-list" Typo="Typo.caption">View Previous Orders</MudLink>
+}
+@code {
+
+	[CascadingParameter] StateProvider StateProvider { get; set; }
+	protected async Task RemoveCartItem(CartData Item)
+	{
+		StateProvider.ShoppingCart.Items.Remove(Item);
+		await StateProvider.SaveChangesAsync();
+	}
+
+	private void ConfirmCheckOut()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you really want to confirm your order? This process cannot be undone.");
+        parameters.Add("ButtonText", "Confirm");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        DialogService.Show<Dialog>("CheckOut", parameters, options);
+    }
+}

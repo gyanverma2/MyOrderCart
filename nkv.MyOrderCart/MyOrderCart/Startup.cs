@@ -10,16 +10,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MudBlazor.Services;
+using MyOrderCart.Services;
+using Microsoft.AspNetCore.ProtectedBrowserStorage;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.DotNet.PlatformAbstractions;
 
 namespace MyOrderCart
 {
-    public class Startup
-    {
+public class Startup
+{
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -28,7 +32,23 @@ namespace MyOrderCart
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMudServices();
+            services.AddHttpClient();
+            services.AddProtectedBrowserStorage();
             services.AddSingleton<WeatherForecastService>();
+            services.AddDbContextFactory<OrderContext>(opt =>
+               opt.UseSqlite($"Data Source={nameof(OrderContext.OrderDb)}.db"));
+            services.AddSingleton<IFakeApiService, FakeApiService>();
+            services.AddHttpClient<IFakeApiService, FakeApiService>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("APIUrl:FakeAPI"));
+            });
+
+            services.AddSingleton<IDummyRequestAPI, DummyRequestAPI>();
+            services.AddHttpClient<IDummyRequestAPI, DummyRequestAPI>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("APIUrl:DummyRequestAPI"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

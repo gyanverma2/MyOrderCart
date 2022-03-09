@@ -1,0 +1,12 @@
+﻿@code
+{
+	[Fact]
+	public void CounterShouldIncrease()
+	{
+		using var ctx = new TestContext();
+		var cut = ctx.Render(@<Counter />);
+		var buttonElement = cut.Find("button");
+		buttonElement.Click();
+		cut.Find("p").MarkupMatches(@<p>Current count: 1</p>);
+	}
+}

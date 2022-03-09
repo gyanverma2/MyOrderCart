@@ -1,0 +1,56 @@
+﻿@inject ProtectedLocalStorage ProtectedLocalStore
+
+@if (hasLoaded)
+{
+    <CascadingValue Value="@this">
+        @ChildContent
+    </CascadingValue>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+
+    [Parameter] 
+    public RenderFragment ChildContent { get; set; }
+
+    public Cart ShoppingCart { get; set; }
+
+    bool hasLoaded;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ShoppingCart = await ProtectedLocalStore.GetAsync<Cart>("MyShoppingCart");
+              if (ShoppingCart == null || ShoppingCart.Items.Count == 0)
+                {
+                    ShoppingCart = new Cart();
+                }
+                else
+                {
+                    if (DateTime.Now > ShoppingCart.LastAccessed.AddSeconds(ShoppingCart.TimeToLiveInSeconds))          
+                    {
+                        ShoppingCart = new Cart();
+                    }
+                }
+                ShoppingCart.LastAccessed = DateTime.Now;
+                hasLoaded = true;
+                StateHasChanged();
+        }
+    }
+
+    public async Task SaveChangesAsync() 
+    {
+        ShoppingCart.LastAccessed = DateTime.Now;
+        await ProtectedLocalStore.SetAsync("MyShoppingCart", ShoppingCart);
+        StateHasChanged();
+    }
+    public async Task ClearStateAsync() 
+    {
+        ShoppingCart=new Cart();
+        await ProtectedLocalStore.DeleteAsync("MyShoppingCart");
+        StateHasChanged();
+    }
+}
