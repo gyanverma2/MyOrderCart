@@ -1,0 +1,68 @@
+﻿@code
+{
+	[Fact]
+	public void ProductList_LoadingShouldAppear()
+	{
+		var productList = new List<Product>{ new Product()
+			{
+				id=1,
+				category="Cat1",
+				description="Desc1",
+				title="Product1",
+				price=10,
+				image="",rating=new Rating()
+				{
+					count=10,
+					rate=4.5
+				}
+			}
+		};
+		using var ctx = new TestContext();
+		ctx.Services.AddTransient<IFakeApiService, FakeApiService>();
+		var mock = ctx.Services.AddMockHttpClient();
+		mock.When("/product").RespondJson(productList);
+		var cut = ctx.Render(@<ProductListComponent />);
+		cut.Find("p").MarkupMatches("<p>Loading...</p>");
+	}
+	[Fact]
+	public void ProductList_DisplayedCorrectly()
+	{
+		var productList = new List<Product>{ new Product()
+			{
+				id=1,
+				category="Cat1",
+				description="Desc1",
+				title="Product1",
+				price=10,
+				image="",rating=new Rating()
+				{
+					count=10,
+					rate=4.5
+				}
+			},
+			new Product(){
+				id=1,
+				category="Cat1",
+				description="Desc1",
+				title="Product2",
+				price=10,
+				image="",rating=new Rating()
+				{
+					count=10,
+					rate=4.5
+				}
+			}
+		};
+		using var ctx = new TestContext();
+		ctx.Services.AddTransient<IFakeApiService, FakeApiService>();
+		var mock = ctx.Services.AddMockHttpClient();
+		mock.When("/product").RespondJson(productList);
+		var fakeAPIServiceMock = Mock.Create<IFakeApiService>();
+		Mock.Arrange(() => fakeAPIServiceMock.GetProductsAsync())
+			.Returns(Task.FromResult<List<Product>>(productList));
+
+		var cut = ctx.RenderComponent<ProductListComponent>();
+		cut.Markup.Contains("Product1");
+		cut.Markup.Contains("Product2");
+	}
+}

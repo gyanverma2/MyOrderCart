@@ -1,0 +1,10 @@
+﻿@code
+{
+	[Fact]
+	public void CartComponent_EmptyCart()
+	{
+		using var ctx = new TestContext();
+		var cut = ctx.Render(@<CartComponent />);
+		cut.Find("h5").TextContent.MarkupMatches("Your Cart: Is Empty");
+	}
+}

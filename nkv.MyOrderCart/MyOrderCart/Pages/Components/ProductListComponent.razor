@@ -1,0 +1,84 @@
+﻿@inject IFakeApiService FakeApiService
+
+<MudGrid Spacing="4" Justify="Justify.FlexStart">
+	@if (Products == null)
+	{
+		<MudItem xs="12" sm="12" lg="12" md="12">
+			<MudSkeleton />
+			<MudSkeleton Animation="Animation.False" />
+			<MudSkeleton Animation="Animation.Wave" />
+			<p>Loading...</p>
+		</MudItem>
+	}
+	else
+	{
+		<MudTable Items="@Products" Dense="false" Hover="true" Bordered="true" Striped="true" Filter="new Func<Product,bool>(ProductFilterFunc)">
+			<ToolBarContent>
+				<MudText Typo="Typo.h6">Product List</MudText>
+				<MudSpacer />
+				<MudTextField @bind-Value="searchKey" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+			</ToolBarContent>
+			<HeaderContent>
+				<MudTh>Id</MudTh>
+				<MudTh>Title</MudTh>
+				<MudTh>Price</MudTh>
+				<MudTh></MudTh>
+			</HeaderContent>
+			<RowTemplate>
+				<MudTd DataLabel="Id">@context.id</MudTd>
+				<MudTd DataLabel="Title">@context.title</MudTd>
+				<MudTd DataLabel="Price">€ @(context.price)</MudTd>
+				<MudTd>
+					<MudButton Variant="Variant.Filled" FullWidth="true" @onclick="@(() => AddToCart(@context))" StartIcon="@Icons.Material.Filled.AddShoppingCart" Color="Color.Primary">Add To Cart</MudButton>
+				</MudTd>
+			</RowTemplate>
+			<PagerContent>
+				<MudTablePager />
+			</PagerContent>
+		</MudTable>
+
+	}
+</MudGrid>
+
+@code {
+	[CascadingParameter] StateProvider StateProvider { get; set; }
+	private List<Product> Products;
+
+	private string searchKey = "";
+
+	private IEnumerable<Product> Elements = new List<Product>();
+
+	private bool ProductFilterFunc(Product element) => FilterFunc(element, searchKey);
+
+	private bool FilterFunc(Product element, string key)
+	{
+		if (string.IsNullOrWhiteSpace(key))
+			return true;
+		if (element.title.Contains(key, StringComparison.OrdinalIgnoreCase))
+			return true;
+		return false;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		Products = await FakeApiService.GetProductsAsync();
+	}
+	protected async Task AddToCart(Product product)
+	{
+		var existingItem = StateProvider.ShoppingCart.Items.Where(i => i.Product.id == product.id).FirstOrDefault();
+		if (existingItem != null)
+		{
+			existingItem.Quantity = existingItem.Quantity + 1;
+		}
+		else
+		{
+			var item = new CartData
+				{
+					Product = product,
+					Quantity = 1
+				};
+			StateProvider.ShoppingCart.Items.Add(item);
+		}
+		await StateProvider.SaveChangesAsync();
+	}
+}

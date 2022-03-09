@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MudBlazor.Services;
 using MyOrderCart.Services;
+using Microsoft.AspNetCore.ProtectedBrowserStorage;
 
 namespace MyOrderCart
 {
@@ -32,9 +33,13 @@ namespace MyOrderCart
             services.AddServerSideBlazor();
             services.AddMudServices();
             services.AddHttpClient();
-            services.AddTransient<FakeApiService>();
+            services.AddProtectedBrowserStorage();
             services.AddSingleton<WeatherForecastService>();
-            services.AddSingleton<ProductService>();
+            services.AddSingleton<IFakeApiService, FakeApiService>();
+            services.AddHttpClient<IFakeApiService, FakeApiService>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("APIUrl:FakeAPI"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
