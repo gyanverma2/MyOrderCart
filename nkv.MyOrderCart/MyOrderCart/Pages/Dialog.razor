@@ -1,5 +1,6 @@
 ﻿@inject IDbContextFactory<OrderContext> DbFactory
 @inject ISnackbar Snackbar
+@inject IDummyRequestAPI DummyRequestAPI
 <MudDialog>
     <DialogContent>
         <MudText>@ContentText</MudText>
@@ -19,14 +20,48 @@
 
     [Parameter] public Color Color { get; set; }
 
-    protected async Task CheckOut()
-	{
-		using var context = DbFactory.CreateDbContext();
-		context.Orders.Add(StateProvider.ShoppingCart);
-		await context.SaveChangesAsync();
-		await StateProvider.ClearStateAsync();
-        MudDialog.Close(DialogResult.Ok(true));
-        Snackbar.Add("Thanks for shopping with us!", Severity.Success);
-	}
     void Cancel() => MudDialog.Cancel();
+    protected async Task CheckOut()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Orders.Add(StateProvider.ShoppingCart);
+        await context.SaveChangesAsync();
+        MudDialog.Close(DialogResult.Ok(true));
+
+        //External System Request
+        await DummyExternalRequest(StateProvider.ShoppingCart);
+        //Normal System
+        //await StateProvider.ClearStateAsync();
+        //Snackbar.Add("Thanks for shopping with us!", Severity.Success);
+    }
+    protected async Task DummyExternalRequest(Cart cart)
+    {
+        ExternalConfirmationData request = new ExternalConfirmationData()
+            {
+                orderStatus = "confirmed",
+                totalPrice = cart.Total,
+                products = new List<ProductExternal>()
+            };
+        foreach(var item in cart.Items)
+        {
+            request.products.Add(new ProductExternal()
+                {
+                    quantity = item.Quantity,
+                    id = item.Product.id,
+                    price = item.Product.price,
+                    title = item.Product.title
+                });
+        }
+        if( await DummyRequestAPI.ConfirmOrderInExternalSystemAsync(request))
+        {
+            Snackbar.Add("Request submited to external system!", Severity.Success);
+             await StateProvider.ClearStateAsync();
+        }
+        else
+        {
+            Snackbar.Add("Failed to submit the request, Please try again!", Severity.Error);
+        }
+
+    }
+    
 }

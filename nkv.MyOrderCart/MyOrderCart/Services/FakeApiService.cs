@@ -13,7 +13,6 @@ namespace MyOrderCart.Services
         public FakeApiService(HttpClient httpClient)
         {
             HttpClient = httpClient;
-            //HttpClient.BaseAddress = new Uri(iConfig.GetValue<string>("APIUrl:FakeAPI"));
         }
 
         public async Task<List<Product>> GetProductsAsync()

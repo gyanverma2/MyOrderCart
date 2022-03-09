@@ -34,5 +34,9 @@ namespace MyOrderCart.Data
         }
         #endregion
 
+        #region JustForUI
+        public DateTime LastAccessed { get; set; }
+        public int TimeToLiveInSeconds { get; set; } = 60 * 60;
+        #endregion
     }
 }

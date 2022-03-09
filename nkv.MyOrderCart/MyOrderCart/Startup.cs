@@ -43,6 +43,12 @@ public class Startup
             {
                 c.BaseAddress = new Uri(Configuration.GetValue<string>("APIUrl:FakeAPI"));
             });
+
+            services.AddSingleton<IDummyRequestAPI, DummyRequestAPI>();
+            services.AddHttpClient<IDummyRequestAPI, DummyRequestAPI>(c =>
+            {
+                c.BaseAddress = new Uri(Configuration.GetValue<string>("APIUrl:DummyRequestAPI"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
