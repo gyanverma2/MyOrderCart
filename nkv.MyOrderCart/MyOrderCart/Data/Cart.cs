@@ -11,6 +11,16 @@ namespace MyOrderCart.Data
     {
         [Key]
         public int Id { get; set; }
+        public List<CartData> Items = new List<CartData>();
+        public double Total
+        {
+            get
+            {
+                return Math.Round(Items.Sum(x => x.Total),2);
+            }
+        }
+
+        #region ForDBUse
         public string ItemsJSON
         {
             get
@@ -19,19 +29,10 @@ namespace MyOrderCart.Data
             }
             set
             {
-                Items= JsonConvert.DeserializeObject<List<CartData>>(value);
+                Items = JsonConvert.DeserializeObject<List<CartData>>(value);
             }
         }
-        public List<CartData> Items = new List<CartData>();
+        #endregion
 
-        public double Total
-        {
-            get
-            {
-                return Math.Round(Items.Sum(x => x.Total),2);
-            }
-        }
-        public DateTime LastAccessed { get; set; }
-        public int TimeToLiveInSeconds { get; set; } = 30; // default
     }
 }

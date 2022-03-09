@@ -1,0 +1,32 @@
+﻿@inject IDbContextFactory<OrderContext> DbFactory
+@inject ISnackbar Snackbar
+<MudDialog>
+    <DialogContent>
+        <MudText>@ContentText</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="CheckOut">@ButtonText</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] StateProvider StateProvider { get; set; }
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public string ContentText { get; set; }
+
+    [Parameter] public string ButtonText { get; set; }
+
+    [Parameter] public Color Color { get; set; }
+
+    protected async Task CheckOut()
+	{
+		using var context = DbFactory.CreateDbContext();
+		context.Orders.Add(StateProvider.ShoppingCart);
+		await context.SaveChangesAsync();
+		await StateProvider.ClearStateAsync();
+        MudDialog.Close(DialogResult.Ok(true));
+        Snackbar.Add("Thanks for shopping with us!", Severity.Success);
+	}
+    void Cancel() => MudDialog.Cancel();
+}

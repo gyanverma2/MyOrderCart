@@ -33,7 +33,6 @@ namespace MyOrderCart
                 });
         private static void EnsureDbCreatedAsync(DbContextOptions<OrderContext> options, int count)
         {
-            // empty to avoid logging while inserting (otherwise will flood console)
             var factory = new LoggerFactory();
             var builder = new DbContextOptionsBuilder<OrderContext>(options)
                 .UseLoggerFactory(factory);
