@@ -143,6 +143,7 @@ Blazor Unit Testing of components can be done by following the [bUnit](https://b
   <li>[Newtonsoft.Json](https://www.nuget.org/packages/Newtonsoft.Json/)</li>
   <li>[Microsoft.AspNetCore.ProtectedBrowserStorage 0.1.0] (https://www.nuget.org/packages/Microsoft.AspNetCore.ProtectedBrowserStorage/0.1.0-alpha.19521.1)</li>
   <li>[Microsoft.EntityFrameworkCore 5.0.15](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore/7.0.0-preview.1.22076.6)</li>
+  <li>[Microsoft.EntityFrameworkCore.InMemory 5.0.15](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.InMemory/5.0.15)</li>
   <li>[Microsoft.EntityFrameworkCore.Sqlite 5.0.15](https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite/7.0.0-preview.1.22076.6)</li>
   <li>[RichardSzalay.MockHttp 6.0.0](https://www.nuget.org/packages/RichardSzalay.MockHttp/)</li>
   <li>[xunit 2.4.1](https://www.nuget.org/packages/xunit/2.4.2-pre.12)</li>
