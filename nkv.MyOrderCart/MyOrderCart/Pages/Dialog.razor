@@ -26,18 +26,18 @@
     {
         
         //External System Request
-        //await DummyExternalRequest(StateProvider.ShoppingCart);
+            await DummyExternalRequest(StateProvider.ShoppingCart);
 
         //SQLite System
-        //using var context = DbFactory.CreateDbContext();
-        //context.Orders.Add(StateProvider.ShoppingCart);
-        //await context.SaveChangesAsync();
+            //using var context = DbFactory.CreateDbContext();
+            //context.Orders.Add(StateProvider.ShoppingCart);
+            //await context.SaveChangesAsync();
       
 
         //InMemorey
-        using var inMemoryContext = inMemoryDb.CreateDbContext();
-        inMemoryContext.Orders.Add(StateProvider.ShoppingCart);
-        await inMemoryContext.SaveChangesAsync();
+            using var inMemoryContext = inMemoryDb.CreateDbContext();
+            inMemoryContext.Orders.Add(StateProvider.ShoppingCart);
+            await inMemoryContext.SaveChangesAsync();   
 
         await StateProvider.ClearStateAsync();
         Snackbar.Add("Thanks for shopping with us!", Severity.Success);
