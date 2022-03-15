@@ -1,4 +1,5 @@
 ﻿@inject IDbContextFactory<OrderContext> DbFactory
+@inject IDbContextFactory<InMemoryContext> inMemoryDb;
 @inject ISnackbar Snackbar
 @inject IDummyRequestAPI DummyRequestAPI
 <MudDialog>
@@ -23,16 +24,24 @@
     void Cancel() => MudDialog.Cancel();
     protected async Task CheckOut()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Orders.Add(StateProvider.ShoppingCart);
-        await context.SaveChangesAsync();
-        MudDialog.Close(DialogResult.Ok(true));
-
+        
         //External System Request
-        await DummyExternalRequest(StateProvider.ShoppingCart);
-        //Normal System
-        //await StateProvider.ClearStateAsync();
-        //Snackbar.Add("Thanks for shopping with us!", Severity.Success);
+        //await DummyExternalRequest(StateProvider.ShoppingCart);
+
+        //SQLite System
+        //using var context = DbFactory.CreateDbContext();
+        //context.Orders.Add(StateProvider.ShoppingCart);
+        //await context.SaveChangesAsync();
+      
+
+        //InMemorey
+        using var inMemoryContext = inMemoryDb.CreateDbContext();
+        inMemoryContext.Orders.Add(StateProvider.ShoppingCart);
+        await inMemoryContext.SaveChangesAsync();
+
+        await StateProvider.ClearStateAsync();
+        Snackbar.Add("Thanks for shopping with us!", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(true));
     }
     protected async Task DummyExternalRequest(Cart cart)
     {

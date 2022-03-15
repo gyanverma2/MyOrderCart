@@ -15,7 +15,6 @@ using MyOrderCart.Services;
 using Microsoft.AspNetCore.ProtectedBrowserStorage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.DotNet.PlatformAbstractions;
-
 namespace MyOrderCart
 {
 public class Startup
@@ -36,14 +35,13 @@ public class Startup
             services.AddHttpClient();
             services.AddProtectedBrowserStorage();
             services.AddSingleton<WeatherForecastService>();
-            services.AddDbContextFactory<OrderContext>(opt =>
-               opt.UseSqlite($"Data Source={nameof(OrderContext.OrderDb)}.db"));
+            services.AddDbContextFactory<OrderContext>(opt => opt.UseSqlite($"Data Source={nameof(OrderContext.OrderDb)}.db"));
             services.AddSingleton<IFakeApiService, FakeApiService>();
             services.AddHttpClient<IFakeApiService, FakeApiService>(c =>
             {
                 c.BaseAddress = new Uri(Configuration.GetValue<string>("APIUrl:FakeAPI"));
             });
-
+            services.AddDbContextFactory<InMemoryContext>(options => options.UseInMemoryDatabase(databaseName: "InMemoryDB"));
             services.AddSingleton<IDummyRequestAPI, DummyRequestAPI>();
             services.AddHttpClient<IDummyRequestAPI, DummyRequestAPI>(c =>
             {
