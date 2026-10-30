@@ -1,0 +1,9 @@
+{
+  "name": "e2e-pr-gate-malicious",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "custom-solutions": "20.8.9",
+    "lodash": "^4.17.21"
+  }
+}
