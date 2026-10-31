@@ -1,0 +1,14 @@
+name: VibeDoctor
+description: Send test coverage from your CI to VibeDoctor.
+author: VibeDoctor
+inputs:
+  coverage-file:
+    description: Path or glob of your LCOV or Cobertura XML coverage report. One per line, or comma separated.
+    required: false
+  api-url:
+    description: VibeDoctor API address. Leave unset.
+    required: false
+    default: https://vibedoctor.io
+runs:
+  using: node24
+  main: dist/index.js
