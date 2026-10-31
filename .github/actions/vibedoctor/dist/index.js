@@ -24723,8 +24723,12 @@ var ATTEMPTS = 2;
 var RETRY_DELAY_MS = 2e3;
 var TIMEOUT_MS = 3e4;
 var MAX_MESSAGE_LENGTH = 300;
+function uploadUrl(apiUrl) {
+  const base = new URL(apiUrl);
+  return base.pathname === "/" ? new URL(COVERAGE_ROUTE, base) : base;
+}
 async function sendCoverage(apiUrl, nextToken, payload, fetchImpl = fetch, retryDelayMs = RETRY_DELAY_MS) {
-  const url = new URL(COVERAGE_ROUTE, apiUrl);
+  const url = uploadUrl(apiUrl);
   if (url.protocol !== "https:" && !LOCAL_HOSTS.has(url.hostname)) {
     return { sent: false, message: `api-url must use https (got ${url.origin}). Coverage was not sent.` };
   }
