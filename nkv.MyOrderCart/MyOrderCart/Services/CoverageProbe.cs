@@ -1,3 +1,4 @@
+// VibeDoctor coverage check test: no CI run for this commit
 namespace MyOrderCart.Services
 {
     public static class CoverageProbe
